@@ -1,0 +1,23 @@
+﻿{
+  "osVhdUri": {
+    "value": "https://mtpdemovmimages.blob.core.windows.net/vhds/MTPDemo-AADConnect01.vhd"
+  },
+  "dnsLabelPrefix": {
+    "value": "mtpdemo-aadconnect01"
+  },
+  "vmName": {
+    "value": "MTPDemo-AADConnect01"
+  },
+  "location": {
+    "Value": "westus2"
+  },
+  "adminUsername": {
+    "value": "svcadmin"
+  },
+  "adminPassword": {
+    "value": "C0ldL@b2277!"
+  },
+  "OSType": {
+    "Value": "Windows"
+  }
+}

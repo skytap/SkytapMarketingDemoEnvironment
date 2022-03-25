@@ -1,0 +1,321 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "variables": {
+    "api-version": "2015-06-15",
+    "diagStorageAccountName": "mtpdemovmsdiag",
+    "publicIPAddressType": "Dynamic",
+    "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('MTPDemoSubnetName'))]",
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('MTPDemovNetName'))]",
+    "MTPDemoAddressPrefix": "172.16.64.0/26",
+    "MTPDemoSubnetName": "MTPDemo-Subnet",
+    "MTPDemoSubnetPrefix": "172.16.64.0/27",
+    "MTPDemoVMNIC": "[concat(parameters('vmName'), '-NIC')]",
+    "MTPDemoVMPublicIPName": "[concat(parameters('vmName'), '-PublicIP')]",
+    "MTPDemovNetName": "MTPDemo-vNet"
+  },
+  "parameters": {
+    "dnsLabelPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "DNS Label for the Public IP. Must be lowercase. It should match with the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$ or it will raise an error."
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "defaultValue": "Standard_A2_v2",
+      "metadata": {
+        "description": "Size of the VM"
+      }
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies a username for the Virtual Machine."
+      }
+    },
+    "adminPassword": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies the SSH rsa public key file as a string. Use \"ssh-keygen -t rsa -b 2048\" to generate your SSH key pairs."
+      }
+    },
+    "vmName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the VM"
+      }
+    },
+    "powerShellPort": {
+      "type": "string",
+      "defaultValue": "27064"
+    },
+    "remoteDesktopPort": {
+      "type": "string",
+      "defaultValue": "56175"
+    },
+    "OSType": {
+      "type": "string",
+      "defaultValue": "Windows",
+      "allowedValues": [
+        "Windows",
+        "Linux"
+      ],
+      "metadata": {
+        "description": "Type of OS on the OS vhd"
+      }
+    },
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "Location name of the virtual machine"
+      }
+    },
+    "MTPDemo-NSG": {
+      "type": "string",
+      "defaultValue": "MTPDemo-NSG",
+      "metadata": {
+        "description": "Name for the NSG used to allow remote RDP"
+      }
+    },
+    "osVhdUri": {
+      "type": "string",
+      "metadata": {
+        "description": "Uri for the OS vhd"
+      }
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2017-10-01",
+      "kind": "Storage",
+      "type": "Microsoft.Storage/storageAccounts",
+      "location": "[resourceGroup().location]",
+      "name": "[variables('diagStorageAccountName')]",
+      "properties": {},
+      "sku": {
+        "name": "Standard_GRS"
+      }
+    },
+    {
+      "apiVersion": "2017-11-01",
+      "location": "[resourceGroup().location]",
+      "name": "[variables('MTPDemovNetName')]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('MTPDemoAddressPrefix')]"
+          ]
+        },
+        "dhcpOptions": {
+          "dnsServers": [ "172.16.64.4", "8.8.8.8", "208.67.220.220", "149.112.112.112", "23.253.163.53" ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('MTPDemoSubnetName')]",
+            "properties": {
+              "addressPrefix": "[variables('MTPDemoSubnetPrefix')]",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('MTPDemo-NSG'))]"
+              }
+            }
+          }
+        ],
+        "virtualNetworkPeerings": [],
+        "enableDdosProtection": false,
+        "enableVmProtection": false
+      },
+      "dependsOn": [ "[concat('Microsoft.Network/networkSecurityGroups/', parameters('MTPDemo-NSG'))]" ]
+    },
+    {
+      "apiVersion": "2017-11-01",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[parameters('MTPDemo-NSG')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "[parameters('MTPDemo-NSG')]"
+      },
+      "properties": {
+        "securityRules": [
+          {
+            "name": "RDP-Rule",
+            "properties": {
+              "description": "Allow RDP",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound",
+              "destinationPortRanges": [ "3389", "20000" ],
+              "sourceAddressPrefixes": [],
+              "destinationAddressPrefixes": []
+            }
+          },
+          {
+            "name": "HTTP-Rule",
+            "properties": {
+              "description": "Allow WEB",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "80",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "SSH-Rule",
+            "properties": {
+              "description": "Allow SSH",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "22",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 102,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "PowerShell",
+            "properties": {
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "5986",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 103,
+              "direction": "Inbound",
+              "sourcePortRanges": [],
+              "destinationPortRanges": [],
+              "sourceAddressPrefixes": [],
+              "destinationAddressPrefixes": []
+            }
+          },
+          {
+            "name": "Remote_Debugging",
+            "properties": {
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "4015-4030",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 104,
+              "direction": "Inbound",
+              "sourcePortRanges": [],
+              "destinationPortRanges": [],
+              "sourceAddressPrefixes": [],
+              "destinationAddressPrefixes": []
+            }
+          },
+          {
+            "name": "HTTPS-Rule",
+            "properties": {
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "4015-4030",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 105,
+              "direction": "Inbound",
+              "sourcePortRanges": [],
+              "destinationPortRanges": [],
+              "sourceAddressPrefixes": [],
+              "destinationAddressPrefixes": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2017-11-01",
+      "type": "Microsoft.Network/networkInterfaces",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkSecurityGroups/', parameters('MTPDemo-NSG'))]",
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('MTPDemoVMPublicIPName'))]",
+        "[concat('Microsoft.Network/virtualNetworks/', variables('MTPDemovNetName'))]"
+      ],
+      "location": "[resourceGroup().location]",
+      "name": "[variables('MTPDemoVMNIC')]",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "MTPDemoIPConfig01",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('MTPDemoVMPublicIPName'))]"
+              },
+              "subnet": {
+                "id": "[variables('subnetRef')]"
+              },
+              "primary": true,
+              "privateIPAddressVersion": "IPv4"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2017-11-01",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[variables('MTPDemoVMPublicIPName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('dnsLabelPrefix')]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2017-03-30",
+      "type": "Microsoft.Compute/virtualMachines",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('MTPDemoVMNIC'))]"
+      ],
+      "location": "[resourceGroup().location]",
+      "name": "[parameters('vmName')]",
+      "properties": {
+        "licenseType": "Windows_Server",
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "storageProfile": {
+          "osDisk": {
+            "name": "[concat(parameters('vmName'),'-OSDisk')]",
+            "osType": "[parameters('osType')]",
+            "createOption": "Attach",
+            "vhd": {
+              "uri": "[parameters('osVhdUri')]"
+            }
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('MTPDemoVMNIC'))]",
+              "properties": { "primary": true }
+            }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": "true",
+            "storageUri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('diagStorageAccountName')), '2016-01-01').primaryEndpoints.blob)]"
+          }
+        }
+      }
+    }
+  ]
+}

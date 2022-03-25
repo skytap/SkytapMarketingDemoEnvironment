@@ -1,0 +1,23 @@
+{
+  "osVhdUri": {
+    "value": "https://m365defendervmimages.blob.core.windows.net/vhds/M365Defender-AarifS.vhd"
+  },
+  "dnsLabelPrefix": {
+    "value": "m365defender-aarifs"
+  },
+  "vmName": {
+    "value": "M365Defender-AarifS"
+  },
+  "location": {
+    "Value": "NorthCentralUS"
+  },
+  "adminUsername": {
+    "value": "svcadmin"
+  },
+  "adminPassword": {
+    "value": "C0ldL@b2277!"
+  },
+  "OSType": {
+    "Value": "Windows"
+  }
+}

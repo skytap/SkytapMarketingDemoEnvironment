@@ -1,0 +1,23 @@
+{
+  "osVhdUri": {
+    "value": "https://m365defendervmimages.blob.core.windows.net/vhds/M365Defender-ErGubbe.vhd"
+  },
+  "dnsLabelPrefix": {
+    "value": "m365defender-ergubbe"
+  },
+  "vmName": {
+    "value": "M365Defender-ErGubbe"
+  },
+  "location": {
+    "Value": "NorthCentralUS"
+  },
+  "adminUsername": {
+    "value": "svcadmin"
+  },
+  "adminPassword": {
+    "value": "C0ldL@b2277!"
+  },
+  "OSType": {
+    "Value": "Windows"
+  }
+}

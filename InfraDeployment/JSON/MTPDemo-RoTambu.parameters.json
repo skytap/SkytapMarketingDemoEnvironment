@@ -1,0 +1,23 @@
+{
+  "osVhdUri": {
+    "value": "https://mtpdemovmimages.blob.core.windows.net/vhds/MTPDemo-RoTambu.vhd"
+  },
+  "dnsLabelPrefix": {
+    "value": "mtpdemo-rotambu"
+  },
+  "vmName": {
+    "value": "MTPDemo-RoTambu"
+  },
+  "location": {
+    "Value": "westus2"
+  },
+  "adminUsername": {
+    "value": "svcadmin"
+  },
+  "adminPassword": {
+    "value": "C0ldL@b2277!"
+  },
+  "OSType": {
+    "Value": "Windows"
+  }
+}

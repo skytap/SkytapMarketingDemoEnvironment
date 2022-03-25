@@ -1,0 +1,14 @@
+﻿{
+  "osVhdUri": {
+    "value": "https://mtpairvmimages.blob.core.windows.net/vhds/MTP-AIR-SQLServer01.vhd"
+  },
+  "dnsLabelPrefix": {
+    "value": "mtp-air-sql01"
+  },
+  "vmName": {
+    "value": "MTP-AIR-SQL01"
+  },
+  "location": {
+    "Value": "koreacentral"
+  }
+}

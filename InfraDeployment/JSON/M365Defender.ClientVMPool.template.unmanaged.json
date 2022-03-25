@@ -1,0 +1,179 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "variables": {
+    "api-version": "2015-06-15",
+    "diagStorageAccountName": "m365defendervmsdiag",
+    "publicIPAddressType": "Dynamic",
+    "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('M365DefenderSubnetName'))]",
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('M365DefendervNetName'))]",
+    "M365DefenderAddressPrefix": "172.16.40.0/26",
+    "M365DefenderSubnetName": "M365Defender-Subnet",
+    "M365DefenderSubnetPrefix": "172.16.40.0/27",
+    "M365DefenderVMNIC": "[concat(parameters('vmName'), '-NIC')]",
+    "M365DefenderVMPublicIPName": "[concat(parameters('vmName'), '-PublicIP')]",
+    "M365DefendervNetName": "M365Defender-vNet"
+  },
+  "parameters": {
+    "dnsLabelPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "DNS Label for the Public IP. Must be lowercase. It should match with the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$ or it will raise an error."
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "defaultValue": "Standard_A2_v2",
+      "metadata": {
+        "description": "Size of the VM"
+      }
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies a username for the Virtual Machine."
+      }
+    },
+    "adminPassword": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies the SSH rsa public key file as a string. Use \"ssh-keygen -t rsa -b 2048\" to generate your SSH key pairs."
+      }
+    },
+    "vmName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the VM"
+      }
+    },
+    "powerShellPort": {
+      "type": "string",
+      "defaultValue": "27064"
+    },
+    "remoteDesktopPort": {
+      "type": "string",
+      "defaultValue": "56175"
+    },
+    "OSType": {
+      "type": "string",
+      "defaultValue": "Windows",
+      "allowedValues": [
+        "Windows",
+        "Linux"
+      ],
+      "metadata": {
+        "description": "Type of OS on the OS vhd"
+      }
+    },
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "Location name of the virtual machine"
+      }
+    },
+    "M365Defender-NSG": {
+      "type": "string",
+      "defaultValue": "M365Defender-NSG",
+      "metadata": {
+        "description": "Name for the NSG used to allow remote RDP"
+      }
+    },
+    "osVhdUri": {
+      "type": "string",
+      "metadata": {
+        "description": "Uri for the OS vhd"
+      }
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2017-10-01",
+      "kind": "Storage",
+      "type": "Microsoft.Storage/storageAccounts",
+      "location": "[resourceGroup().location]",
+      "name": "[variables('diagStorageAccountName')]",
+      "properties": {},
+      "sku": {
+        "name": "Standard_GRS"
+      }
+    },
+    {
+      "apiVersion": "2017-11-01",
+      "type": "Microsoft.Network/networkInterfaces",
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('M365DefenderVMPublicIPName'))]"
+      ],
+      "location": "[resourceGroup().location]",
+      "name": "[variables('M365DefenderVMNIC')]",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "M365DefenderIPConfig01",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('M365DefenderVMPublicIPName'))]"
+              },
+              "subnet": {
+                "id": "[variables('subnetRef')]"
+              },
+              "primary": true,
+              "privateIPAddressVersion": "IPv4"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2017-11-01",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[variables('M365DefenderVMPublicIPName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('dnsLabelPrefix')]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2017-03-30",
+      "type": "Microsoft.Compute/virtualMachines",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('M365DefenderVMNIC'))]"
+      ],
+      "location": "[resourceGroup().location]",
+      "name": "[parameters('vmName')]",
+      "properties": {
+        "licenseType": "Windows_Server",
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "storageProfile": {
+          "osDisk": {
+            "name": "[concat(parameters('vmName'),'-OSDisk')]",
+            "osType": "[parameters('osType')]",
+            "createOption": "Attach",
+            "vhd": {
+              "uri": "[parameters('osVhdUri')]"
+            }
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('M365DefenderVMNIC'))]",
+              "properties": { "primary": true }
+            }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": "true",
+            "storageUri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('diagStorageAccountName')), '2016-01-01').primaryEndpoints.blob)]"
+          }
+        }
+      }
+    }
+  ]
+}
