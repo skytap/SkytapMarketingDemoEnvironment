@@ -2,4 +2,5 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+/InfraDeployment/VHDs/SMDE-Server2022BaseImage/Virtual Hard Disks/SMDE-Server2022BaseImage.vhdx
 /InfraDeployment/VHDs
