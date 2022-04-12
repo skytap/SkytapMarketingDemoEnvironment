@@ -1,0 +1,23 @@
+﻿{
+  "osVhdUri": {
+    "value": "https://smdeinfrastorage.blob.core.windows.net/vhds/SMDE-DC02.vhd"
+  },
+  "dnsLabelPrefix": {
+    "value": "smde-dc01"
+  },
+  "vmName": {
+    "value": "SMDE-DC02"
+  },
+  "location": {
+    "Value": "UKSouth"
+  },
+  "adminUsername": {
+    "value": "svcadmin"
+  },
+  "adminPassword": {
+    "value": "C0ldL@b2277!"
+  },
+  "OSType": {
+    "Value": "Windows"
+  }
+}

@@ -13,11 +13,11 @@ cd $PSScriptRoot;
 #region Setup Parameters
 
 # Set credentials
-$SiteAdmin = "svcAdmin@mtpdemos.net";
+$SiteAdmin = "svcAdmin@skytapmarketingdemo.net";
 $Password = ConvertTo-SecureString "MTPr0cks!" -AsPlainText -Force;
 
 $DateTime = [DateTime]::Now.ToString("yyyyMMdd");
-$SiteUrl = "https://mtpdemos.sharepoint.com"
+$SiteUrl = "https://skytapmarketingdemo.sharepoint.com"
 $NewSitePrefix = "NewTeamSite";
 
 $SiteBaseUrl = "${SiteUrl}/sites/";
@@ -31,23 +31,23 @@ $Sites = @(
 );
 
 $SiteCollectionAdmins = @(
-    "svcAdmin@mtpdemos.net",
-    "RoTambu@mtpdemos.net", 
-    "ErGubbe@mtpdemos.net"
+    "svcAdmin@skytapmarketingdemo.net",
+    "RoTambu@skytapmarketingdemo.net", 
+    "ErGubbe@skytapmarketingdemo.net"
 )
 
 $SiteCollectionMembers = @(
-    "SecOps@mtpdemos.net", 
-    "svcAdmin@mtpdemos.net", 
-    "RoTambu@mtpdemos.net", 
-    "ErGubbe@mtpdemos.net", 
-    "BaMorel@mtpdemos.net", 
-    "LoSunsh@mtpdemos.net", 
-    "GaErick@mtpdemos.net", 
-    "DePoe@mtpdemos.net", 
-    "AnFulle@mtpdemos.net", 
-    "AlexW@mtpdemos.onmicrosoft.com", 
-    "AarifS@mtpdemos.onmicrosoft.com"
+    "SecOps@skytapmarketingdemo.net", 
+    "svcAdmin@skytapmarketingdemo.net", 
+    "RoTambu@skytapmarketingdemo.net", 
+    "ErGubbe@skytapmarketingdemo.net", 
+    "BaMorel@skytapmarketingdemo.net", 
+    "LoSunsh@skytapmarketingdemo.net", 
+    "GaErick@skytapmarketingdemo.net", 
+    "DePoe@skytapmarketingdemo.net", 
+    "AnFulle@skytapmarketingdemo.net", 
+    "AlexW@skytapmarketingdemo.onmicrosoft.com", 
+    "AarifS@skytapmarketingdemo.onmicrosoft.com"
 )
 
 $DeleteOldSites = $true;
