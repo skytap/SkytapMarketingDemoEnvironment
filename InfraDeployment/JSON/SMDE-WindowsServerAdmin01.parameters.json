@@ -1,0 +1,23 @@
+{
+  "osVhdUri": {
+    "value": "https://smdeinfrastorage.blob.core.windows.net/vhds/SMDE-WindowsServerAdmin01.vhd"
+  },
+  "dnsLabelPrefix": {
+    "value": "smde-windowsserveradmin01"
+  },
+  "vmName": {
+    "value": "SMDE-WindowsServerAdmin01"
+  },
+  "location": {
+    "Value": "UKSouth"
+  },
+  "adminUsername": {
+    "value": "svcadmin"
+  },
+  "adminPassword": {
+    "value": "C0ldL@b2277!"
+  },
+  "OSType": {
+    "Value": "Windows"
+  }
+}
