@@ -109,7 +109,12 @@
           ]
         },
         "dhcpOptions": {
-          "dnsServers": [ "8.8.8.8", "208.67.220.220", "149.112.112.112", "23.253.163.53" ]
+          "dnsServers": [
+            "8.8.8.8",
+            "208.67.220.220",
+            "149.112.112.112",
+            "23.253.163.53"
+          ]
         },
         "subnets": [
           {
@@ -126,7 +131,9 @@
         "enableDdosProtection": false,
         "enableVmProtection": false
       },
-      "dependsOn": [ "[concat('Microsoft.Network/networkSecurityGroups/', parameters('SMDE-NSG'))]" ]
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkSecurityGroups/', parameters('SMDE-NSG'))]"
+      ]
     },
     {
       "apiVersion": "2017-11-01",
@@ -150,7 +157,10 @@
               "access": "Allow",
               "priority": 100,
               "direction": "Inbound",
-              "destinationPortRanges": [ "3389", "20000" ],
+              "destinationPortRanges": [
+                "3389",
+                "20000"
+              ],
               "sourceAddressPrefixes": [],
               "destinationAddressPrefixes": []
             }
@@ -243,7 +253,9 @@
           "networkInterfaces": [
             {
               "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('SMDEVMNIC'))]",
-              "properties": { "primary": true }
+              "properties": {
+                "primary": true
+              }
             }
           ]
         },

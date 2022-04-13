@@ -1,6 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\InfraDeployment",
+    "\\InfraDeployment\\DataInput",
+    "\\InfraDeployment\\JSON",
+    "\\InfraDeployment\\PowerShellScripts"
   ],
+  "SelectedNode": "\\InfraDeployment\\JSON\\SMDE.MarketingSoADemoEnvironment.ClientVMPool.template.unmanaged.json",
   "PreviewInSolutionExplorer": false
 }
