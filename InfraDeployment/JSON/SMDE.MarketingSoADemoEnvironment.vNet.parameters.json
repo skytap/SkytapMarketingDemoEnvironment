@@ -1,64 +1,64 @@
 ﻿{
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "location": {
-            "value": "uksouth"
-        },
-        "extendedLocation": {
-            "value": {}
-        },
-        "virtualNetworkName": {
-            "value": "SMDE-vNet"
-        },
-        "resourceGroup": {
-            "value": "MarketingDemoEnvironment"
-        },
-        "addressSpaces": {
-            "value": [
-                "172.16.10.0/23"
-            ]
-        },
-        "subnetCount": {
-            "value": 1
-        },
-        "subnet0_name": {
-            "value": "SMDE-PrimarySubnet"
-        },
-        "subnet0_addressRange": {
-            "value": "172.16.10.0/24"
-        },
-        "subnet0_serviceEndpoints": {
-            "value": [
-                "Microsoft.AzureActiveDirectory",
-                "Microsoft.AzureCosmosDB",
-                "Microsoft.CognitiveServices",
-                "Microsoft.ContainerRegistry",
-                "Microsoft.EventHub",
-                "Microsoft.KeyVault",
-                "Microsoft.ServiceBus",
-                "Microsoft.Sql",
-                "Microsoft.Storage",
-                "Microsoft.Web"
-            ]
-        },
-        "ddosProtectionPlanEnabled": {
-            "value": false
-        },
-        "firewallEnabled": {
-            "value": false
-        },
-        "bastionEnabled": {
-            "value": true
-        },
-        "bastionName": {
-            "value": "SMDE-Bastion"
-        },
-        "bastionSubnetAddressSpace": {
-            "value": "172.16.11.128/25"
-        },
-        "publicIpAddressForBastion": {
-            "value": "SMDE-BastionPublicIP"
-        }
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "value": "uksouth"
+    },
+    "extendedLocation": {
+      "value": {}
+    },
+    "virtualNetworkName": {
+      "value": "SMDE-vNet"
+    },
+    "resourceGroup": {
+      "value": "MarketingDemoEnvironment"
+    },
+    "addressSpaces": {
+      "value": [
+        "172.16.10.0/23"
+      ]
+    },
+    "subnetCount": {
+      "value": 1
+    },
+    "subnet0_name": {
+      "value": "SMDE-PrimarySubnet"
+    },
+    "subnet0_addressRange": {
+      "value": "172.16.10.0/24"
+    },
+    "subnet0_serviceEndpoints": {
+      "value": [
+        "Microsoft.AzureActiveDirectory",
+        "Microsoft.AzureCosmosDB",
+        "Microsoft.CognitiveServices",
+        "Microsoft.ContainerRegistry",
+        "Microsoft.EventHub",
+        "Microsoft.KeyVault",
+        "Microsoft.ServiceBus",
+        "Microsoft.Sql",
+        "Microsoft.Storage",
+        "Microsoft.Web"
+      ]
+    },
+    "ddosProtectionPlanEnabled": {
+      "value": false
+    },
+    "firewallEnabled": {
+      "value": false
+    },
+    "bastionEnabled": {
+      "value": true
+    },
+    "bastionName": {
+      "value": "SMDE-Bastion"
+    },
+    "bastionSubnetAddressSpace": {
+      "value": "172.16.11.128/25"
+    },
+    "publicIpAddressForBastion": {
+      "value": "SMDE-BastionPublicIP"
     }
+  }
 }

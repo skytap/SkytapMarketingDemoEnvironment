@@ -1,214 +1,214 @@
 ﻿{
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "location": {
-            "type": "String"
-        },
-        "extendedLocation": {
-            "type": "Object"
-        },
-        "virtualNetworkName": {
-            "type": "String"
-        },
-        "resourceGroup": {
-            "type": "String"
-        },
-        "addressSpaces": {
-            "type": "Array"
-        },
-        "ipv6Enabled": {
-            "type": "Bool"
-        },
-        "ipv6AddressSpaces": {
-            "type": "Array"
-        },
-        "subnetCount": {
-            "type": "Int"
-        },
-        "subnet0_name": {
-            "type": "String"
-        },
-        "subnet0_addressRange": {
-            "type": "String"
-        },
-        "subnet0_ipv6AddressRange": {
-            "type": "String"
-        },
-        "subnet0_serviceEndpoints": {
-            "type": "Array"
-        },
-        "subnet1_name": {
-            "type": "String"
-        },
-        "subnet1_addressRange": {
-            "type": "String"
-        },
-        "subnet1_serviceEndpoints": {
-            "type": "Array"
-        },
-        "ddosProtectionPlanEnabled": {
-            "type": "Bool"
-        },
-        "firewallEnabled": {
-            "type": "Bool"
-        },
-        "bastionEnabled": {
-            "type": "Bool"
-        },
-        "bastionName": {
-            "type": "String"
-        },
-        "bastionSubnetAddressSpace": {
-            "type": "String"
-        },
-        "publicIpAddressForBastion": {
-            "type": "String"
-        }
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "String"
     },
-    "variables": {},
-    "resources": [
-        {
-            "type": "Microsoft.Network/VirtualNetworks",
-            "apiVersion": "2021-01-01",
-            "name": "[parameters('virtualNetworkName')]",
-            "location": "[parameters('location')]",
-            "extendedLocation": "[if(empty(parameters('extendedLocation')), json('null'), parameters('extendedLocation'))]",
-            "dependsOn": [],
-            "tags": {},
+    "extendedLocation": {
+      "type": "Object"
+    },
+    "virtualNetworkName": {
+      "type": "String"
+    },
+    "resourceGroup": {
+      "type": "String"
+    },
+    "addressSpaces": {
+      "type": "Array"
+    },
+    "ipv6Enabled": {
+      "type": "Bool"
+    },
+    "ipv6AddressSpaces": {
+      "type": "Array"
+    },
+    "subnetCount": {
+      "type": "Int"
+    },
+    "subnet0_name": {
+      "type": "String"
+    },
+    "subnet0_addressRange": {
+      "type": "String"
+    },
+    "subnet0_ipv6AddressRange": {
+      "type": "String"
+    },
+    "subnet0_serviceEndpoints": {
+      "type": "Array"
+    },
+    "subnet1_name": {
+      "type": "String"
+    },
+    "subnet1_addressRange": {
+      "type": "String"
+    },
+    "subnet1_serviceEndpoints": {
+      "type": "Array"
+    },
+    "ddosProtectionPlanEnabled": {
+      "type": "Bool"
+    },
+    "firewallEnabled": {
+      "type": "Bool"
+    },
+    "bastionEnabled": {
+      "type": "Bool"
+    },
+    "bastionName": {
+      "type": "String"
+    },
+    "bastionSubnetAddressSpace": {
+      "type": "String"
+    },
+    "publicIpAddressForBastion": {
+      "type": "String"
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.Network/VirtualNetworks",
+      "apiVersion": "2021-01-01",
+      "name": "[parameters('virtualNetworkName')]",
+      "location": "[parameters('location')]",
+      "extendedLocation": "[if(empty(parameters('extendedLocation')), json('null'), parameters('extendedLocation'))]",
+      "dependsOn": [],
+      "tags": {},
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "172.16.10.0/23",
+            "ace:cab:deca::/48"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "SMDE-PrimarySubnet",
             "properties": {
-                "addressSpace": {
-                    "addressPrefixes": [
-                        "172.16.10.0/23",
-                        "ace:cab:deca::/48"
-                    ]
+              "addressPrefixes": [
+                "172.16.10.0/24",
+                "ace:cab:deca::/64"
+              ],
+              "serviceEndpoints": [
+                {
+                  "service": "Microsoft.AzureActiveDirectory"
                 },
-                "subnets": [
-                    {
-                        "name": "SMDE-PrimarySubnet",
-                        "properties": {
-                            "addressPrefixes": [
-                                "172.16.10.0/24",
-                                "ace:cab:deca::/64"
-                            ],
-                            "serviceEndpoints": [
-                                {
-                                    "service": "Microsoft.AzureActiveDirectory"
-                                },
-                                {
-                                    "service": "Microsoft.AzureCosmosDB"
-                                },
-                                {
-                                    "service": "Microsoft.CognitiveServices"
-                                },
-                                {
-                                    "service": "Microsoft.ContainerRegistry"
-                                },
-                                {
-                                    "service": "Microsoft.EventHub"
-                                },
-                                {
-                                    "service": "Microsoft.KeyVault"
-                                },
-                                {
-                                    "service": "Microsoft.ServiceBus"
-                                },
-                                {
-                                    "service": "Microsoft.Sql"
-                                },
-                                {
-                                    "service": "Microsoft.Storage"
-                                },
-                                {
-                                    "service": "Microsoft.Web"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "name": "SMDE-SecondarySubnet",
-                        "properties": {
-                            "addressPrefix": "172.16.11.0/25",
-                            "serviceEndpoints": [
-                                {
-                                    "service": "Microsoft.AzureActiveDirectory"
-                                },
-                                {
-                                    "service": "Microsoft.AzureCosmosDB"
-                                },
-                                {
-                                    "service": "Microsoft.CognitiveServices"
-                                },
-                                {
-                                    "service": "Microsoft.ContainerRegistry"
-                                },
-                                {
-                                    "service": "Microsoft.EventHub"
-                                },
-                                {
-                                    "service": "Microsoft.KeyVault"
-                                },
-                                {
-                                    "service": "Microsoft.ServiceBus"
-                                },
-                                {
-                                    "service": "Microsoft.Sql"
-                                },
-                                {
-                                    "service": "Microsoft.Storage"
-                                },
-                                {
-                                    "service": "Microsoft.Web"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "name": "AzureBastionSubnet",
-                        "properties": {
-                            "addressPrefix": "[parameters('bastionSubnetAddressSpace')]"
-                        }
-                    }
-                ],
-                "enableDdosProtection": "[parameters('ddosProtectionPlanEnabled')]"
+                {
+                  "service": "Microsoft.AzureCosmosDB"
+                },
+                {
+                  "service": "Microsoft.CognitiveServices"
+                },
+                {
+                  "service": "Microsoft.ContainerRegistry"
+                },
+                {
+                  "service": "Microsoft.EventHub"
+                },
+                {
+                  "service": "Microsoft.KeyVault"
+                },
+                {
+                  "service": "Microsoft.ServiceBus"
+                },
+                {
+                  "service": "Microsoft.Sql"
+                },
+                {
+                  "service": "Microsoft.Storage"
+                },
+                {
+                  "service": "Microsoft.Web"
+                }
+              ]
             }
-        },
-        {
-            "type": "Microsoft.Network/publicIpAddresses",
-            "apiVersion": "2020-08-01",
-            "name": "[parameters('publicIpAddressForBastion')]",
-            "location": "[parameters('location')]",
-            "sku": {
-                "name": "Standard"
-            },
+          },
+          {
+            "name": "SMDE-SecondarySubnet",
             "properties": {
-                "publicIPAllocationMethod": "Static"
+              "addressPrefix": "172.16.11.0/25",
+              "serviceEndpoints": [
+                {
+                  "service": "Microsoft.AzureActiveDirectory"
+                },
+                {
+                  "service": "Microsoft.AzureCosmosDB"
+                },
+                {
+                  "service": "Microsoft.CognitiveServices"
+                },
+                {
+                  "service": "Microsoft.ContainerRegistry"
+                },
+                {
+                  "service": "Microsoft.EventHub"
+                },
+                {
+                  "service": "Microsoft.KeyVault"
+                },
+                {
+                  "service": "Microsoft.ServiceBus"
+                },
+                {
+                  "service": "Microsoft.Sql"
+                },
+                {
+                  "service": "Microsoft.Storage"
+                },
+                {
+                  "service": "Microsoft.Web"
+                }
+              ]
             }
-        },
-        {
-            "type": "Microsoft.Network/bastionHosts",
-            "apiVersion": "2019-04-01",
-            "name": "[parameters('bastionName')]",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId(parameters('resourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
-                "[resourceId(parameters('resourceGroup'), 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressForBastion'))]"
-            ],
+          },
+          {
+            "name": "AzureBastionSubnet",
             "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "IpConf",
-                        "properties": {
-                            "subnet": {
-                                "id": "[resourceId(parameters('resourceGroup'), 'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), 'AzureBastionSubnet')]"
-                            },
-                            "publicIPAddress": {
-                                "id": "[resourceId(parameters('resourceGroup'), 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressForBastion'))]"
-                            }
-                        }
-                    }
-                ]
+              "addressPrefix": "[parameters('bastionSubnetAddressSpace')]"
             }
-        }
-    ]
+          }
+        ],
+        "enableDdosProtection": "[parameters('ddosProtectionPlanEnabled')]"
+      }
+    },
+    {
+      "type": "Microsoft.Network/publicIpAddresses",
+      "apiVersion": "2020-08-01",
+      "name": "[parameters('publicIpAddressForBastion')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "Standard"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Static"
+      }
+    },
+    {
+      "type": "Microsoft.Network/bastionHosts",
+      "apiVersion": "2019-04-01",
+      "name": "[parameters('bastionName')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId(parameters('resourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+        "[resourceId(parameters('resourceGroup'), 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressForBastion'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "IpConf",
+            "properties": {
+              "subnet": {
+                "id": "[resourceId(parameters('resourceGroup'), 'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), 'AzureBastionSubnet')]"
+              },
+              "publicIPAddress": {
+                "id": "[resourceId(parameters('resourceGroup'), 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressForBastion'))]"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
 }

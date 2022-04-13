@@ -1,39 +1,39 @@
 ﻿{
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "name": {
-            "value": "MarketingSoADemoEnvironment"
-        },
-        "planId": {
-            "value": "ldm1r1_paygo_pub_mar22"
-        },
-        "offerId": {
-            "value": "skytap-on-azure-main1"
-        },
-        "publisherId": {
-            "value": "skytapinc"
-        },
-        "quantity": {
-            "value": 1
-        },
-        "termId": {
-            "value": "hjdtn7tfnxcy"
-        },
-        "azureSubscriptionId": {
-            "value": "564d2745-1496-4766-956b-fc14172c78ab"
-        },
-        "publisherTestEnvironment": {
-            "value": ""
-        },
-        "autoRenew": {
-            "value": true
-        },
-        "location": {
-            "value": "global"
-        },
-        "tags": {
-            "value": {}
-        }
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "value": "MarketingSoADemoEnvironment"
+    },
+    "planId": {
+      "value": "ldm1r1_paygo_pub_mar22"
+    },
+    "offerId": {
+      "value": "skytap-on-azure-main1"
+    },
+    "publisherId": {
+      "value": "skytapinc"
+    },
+    "quantity": {
+      "value": 1
+    },
+    "termId": {
+      "value": "hjdtn7tfnxcy"
+    },
+    "azureSubscriptionId": {
+      "value": "564d2745-1496-4766-956b-fc14172c78ab"
+    },
+    "publisherTestEnvironment": {
+      "value": ""
+    },
+    "autoRenew": {
+      "value": true
+    },
+    "location": {
+      "value": "global"
+    },
+    "tags": {
+      "value": {}
     }
+  }
 }

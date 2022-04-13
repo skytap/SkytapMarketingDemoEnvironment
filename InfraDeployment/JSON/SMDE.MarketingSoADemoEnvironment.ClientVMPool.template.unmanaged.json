@@ -163,7 +163,9 @@
           "networkInterfaces": [
             {
               "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('SMDEVMNIC'))]",
-              "properties": { "primary": true }
+              "properties": {
+                "primary": true
+              }
             }
           ]
         },
